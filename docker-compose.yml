@@ -1,0 +1,56 @@
+version: '3.9'
+services:
+  users:
+    build: ./apps/users
+    container_name: users
+    ports:
+      - 50051:50051
+    depends_on:
+      - users-db
+  products:
+    build: ./apps/products
+    container_name: products
+    ports:
+      - 50052:50052
+    depends_on:
+      - products-db
+  orders:
+    build: ./apps/orders
+    container_name: orders
+    ports:
+      - 50053:50053
+    depends_on:
+      - orders-db
+  api-gateway:
+    build: ./apps/api-gateway
+    container_name: api-gateway
+    ports:
+      - 3000:3000
+    depends_on:
+      - users
+      - products
+      - orders
+  users-db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: usersdb
+    ports:
+      - 5432:5432
+  products-db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: productsdb
+    ports:
+      - 5433:5432
+  orders-db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ordersdb
+    ports:
+      - 5434:5432
